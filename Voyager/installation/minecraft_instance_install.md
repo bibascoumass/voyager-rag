@@ -1,6 +1,8 @@
 # Minecraft Instance Install
 To start using Voyager, you should first make sure to have an official [Minecraft](https://www.minecraft.net/) game (version 1.19) installed. 
 
+BIBASCO: Minecraft will always install the latest version. To run Voyager, we must install 1.19 . [Follow these steps for installing older versions](https://stickypiston.co/account/knowledgebase/173/How-To-Install-a-Previous-Minecraft-Version.html).
+
 There are two ways to start a Minecraft instance for Voyager. Sometimes GPT-4 will write an infinite loop that runs forever. In this case, there'll be a request timeout. Using Azure login can automatically resume the running if there's a request timeout.
 
 ## Option 1: Microsoft Azure Login (Recommended)

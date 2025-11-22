@@ -40,6 +40,8 @@ In this repo, we provide Voyager code. This codebase is under [MIT License](LICE
 # Installation
 Voyager requires Python ≥ 3.9 and Node.js ≥ 16.13.0. We have tested on Ubuntu 20.04, Windows 11, and macOS. You need to follow the instructions below to install Voyager.
 
+BIBASCO: Use Node.JS ≥ 22
+
 ## Python Install
 ```
 git clone https://github.com/MineDojo/Voyager
@@ -58,6 +60,7 @@ npx tsc
 cd ..
 npm install
 ```
+BIBASCO: I've already fixed dependency issues so if you're running into issues here, ensure Node.JS ≥ 22 .
 
 ## Minecraft Instance Install
 
@@ -73,6 +76,14 @@ Follow the instructions in [Fabric Mods Install](installation/fabric_mods_instal
 
 # Getting Started
 Voyager uses OpenAI's GPT-4 as the language model. You need to have an OpenAI API key to use Voyager. You can get one from [here](https://platform.openai.com/account/api-keys).
+
+BIBASCO: Before running starter code below, make sure to install the dependencies listed in the requirements.txt file in a virtual env:
+```
+python -m venv venv/
+source venv/bin/activate
+pip install -r requirements.txt
+```
+* I've checked in sample code at: voyager-rag/Voyager/sample-run.py
 
 After the installation process, you can run Voyager by:
 ```python
