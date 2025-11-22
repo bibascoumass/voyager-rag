@@ -67,15 +67,35 @@ async function collectAll(
                             );
                             // @ts-ignore
                         } else if (err.name === "NoItem") {
-                            const properties =
-                                bot.registry.blocksByName[closest.name];
-                            const leastTool = Object.keys(
-                                properties.harvestTools
-                            )[0];
-                            const item = bot.registry.items[leastTool];
-                            bot.chat(
-                                `I need at least a ${item.name} to mine ${closest.name}!  Skip it!`
-                            );
+                            const blockName = closest?.name;
+
+                            if (!blockName) {
+                                bot.chat("Block name is undefined. Skipping.");
+                                return;
+                            }
+
+                            const blockProps = bot.registry.blocksByName[blockName];
+
+                            if (!blockProps) {
+                                bot.chat(`Unknown block type: ${blockName}. Skipping.`);
+                                return;
+                            }
+
+                            const harvestTools = blockProps.harvestTools;
+
+                            if (harvestTools && Object.keys(harvestTools).length > 0) {
+                                const leastTool = Object.keys(harvestTools)[0];
+                                const item = (bot.registry.items as Record<string, { name: string }>)[leastTool];
+
+                                if (item) {
+                                    bot.chat(`I need at least a ${item.name} to mine ${blockName}! Skip it!`);
+                                } else {
+                                    bot.chat(`I don’t know what tool to use for ${blockName}. Skipping.`);
+                                }
+                            } else {
+                                bot.chat(`No known tools can mine ${blockName}. Skipping.`);
+                            }
+                            
                             return;
                         } else if (
                             // @ts-ignore
