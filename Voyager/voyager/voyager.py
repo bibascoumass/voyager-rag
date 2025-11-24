@@ -48,6 +48,7 @@ class Voyager:
         ckpt_dir: str = "ckpt",
         skill_library_dir: str = None,
         resume: bool = False,
+        kb_dir: str = None,
     ):
         """
         The main class for Voyager.
@@ -99,6 +100,7 @@ class Voyager:
         :param ckpt_dir: checkpoint dir
         :param skill_library_dir: skill library dir
         :param resume: whether to resume from checkpoint
+        :param kb_dir: knowledge base dir
         """
         # init env
         self.env = VoyagerEnv(
@@ -132,6 +134,7 @@ class Voyager:
             qa_temperature=curriculum_agent_qa_temperature,
             request_timout=openai_api_request_timeout,
             ckpt_dir=ckpt_dir,
+            kb_dir=kb_dir,
             resume=resume,
             mode=curriculum_agent_mode,
             warm_up=curriculum_agent_warm_up,

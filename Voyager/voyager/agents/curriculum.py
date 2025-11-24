@@ -12,6 +12,13 @@ from langchain.schema import HumanMessage, SystemMessage
 from langchain.vectorstores import Chroma
 
 
+# 646: 
+import os
+# import argparse
+# from typing import List, Dict
+import chromadb
+from chromadb.utils import embedding_functions
+
 class CurriculumAgent:
     def __init__(
         self,
@@ -21,6 +28,7 @@ class CurriculumAgent:
         qa_temperature=0,
         request_timout=120,
         ckpt_dir="ckpt",
+        kb_dir=None,
         resume=False,
         mode="auto",
         warm_up=None,
@@ -87,6 +95,17 @@ class CurriculumAgent:
         self.warm_up["inventory"] = 0
         self.warm_up["completed_tasks"] = 0
         self.warm_up["failed_tasks"] = 0
+
+        # 646: 
+        self.kb_dir = kb_dir
+        print(f"-------------------------- KB PATH: {self.kb_dir}")
+        if kb_dir:
+            self.kb_client = chromadb.PersistentClient(path=kb_dir)
+            self.openai_ef = embedding_functions.OpenAIEmbeddingFunction(
+                api_key=os.environ.get("OPENAI_API_KEY"),
+                model_name="text-embedding-ada-002"
+            )
+            self.kb_collection = self.kb_client.get_collection("minedojo_wiki", embedding_function=self.openai_ef)
 
     @property
     def default_warmup(self):
@@ -420,16 +439,27 @@ class CurriculumAgent:
             f"How to {task.replace('_', ' ').replace(' ore', '').replace(' ores', '').replace('.', '').strip().lower()}"
             f" in Minecraft?"
         )
-        if question in self.qa_cache:
-            answer = self.qa_cache[question]
-        else:
-            answer = self.run_qa_step2_answer_questions(question=question)
-            self.qa_cache[question] = answer
-            self.qa_cache_questions_vectordb.add_texts(
-                texts=[question],
+        # 646:
+        if self.kb_dir: # check knowledge base            
+            results = self.kb_collection.query(
+                query_texts=[question],
+                n_results=3
             )
-            U.dump_json(self.qa_cache, f"{self.ckpt_dir}/curriculum/qa_cache.json")
-            self.qa_cache_questions_vectordb.persist()
+            answer = "\n".join([f"- {doc}" for doc in results['documents'][0]])
+            print(f"-------------------------- KB answer: {answer}")
+        else: # default behavior
+            print(f"-------------------------- KB dir false: {self.kb_dir}")
+            if question in self.qa_cache:
+                answer = self.qa_cache[question]
+            else:
+                answer = self.run_qa_step2_answer_questions(question=question)
+                self.qa_cache[question] = answer
+                self.qa_cache_questions_vectordb.add_texts(
+                    texts=[question],
+                )
+                U.dump_json(self.qa_cache, f"{self.ckpt_dir}/curriculum/qa_cache.json")
+                self.qa_cache_questions_vectordb.persist()
+
         context = f"Question: {question}\n{answer}"
         return context
 
