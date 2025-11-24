@@ -446,9 +446,8 @@ class CurriculumAgent:
                 n_results=3
             )
             answer = "\n".join([f"- {doc}" for doc in results['documents'][0]])
-            print(f"-------------------------- KB answer: {answer}")
+            # print(f"-------------------------- KB answer: {answer}")
         else: # default behavior
-            print(f"-------------------------- KB dir false: {self.kb_dir}")
             if question in self.qa_cache:
                 answer = self.qa_cache[question]
             else:
