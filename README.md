@@ -27,11 +27,14 @@ We'll need process the wiki/reddit data in order to build the knowledge base. Th
 Basic implementation under: `voyager-rag/Voyager/knowledge_base/kb_data_pipeline.py`
 
 # TODO
-* Everyone should:
-  * Get their own OPENAI_API_KEY
-  * Download the datasets (https://github.com/MineDojo/MineDojo/tree/main/minedojo/data)
-
-Objectives:
 * Replicate Voyager GPT-4 baseline. (Do we even get similar results?)
-* Build the minecraft knowledgebase 
-    * Should use the same text embedding model used by voyager? 
+    * Stub out outline/pseudocode of experiments and how we measure the results.
+* Build the minecraft knowledgebase using the KB pipeline
+    * Ensure the pipeline can process multiple pages 
+    * Ensure the metadata for each chunk is properly set 
+    * Test getting relevant chunks for:
+        * how to craft an item
+        * how to defeat the ender dragon (basically following one of the tutorials)
+        * (TBD) 
+* Update the automatic curriculum to use our knowledge base when looking up task context
+    * Understand why the context starts out as some other value and only gets updated to our RAG system's reply after sometime. Not clear if this is an issue or just the agent's standard behavior. 
