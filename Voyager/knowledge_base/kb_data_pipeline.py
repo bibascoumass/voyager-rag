@@ -7,7 +7,11 @@ from chromadb.utils import embedding_functions
 
 # wiki dataset details: https://docs.minedojo.org/sections/getting_started/data.html#wiki-database
 
-client = chromadb.PersistentClient(path= "./voyager_knowledge_base")
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+db_path = os.path.join(script_dir, "kb1") 
+
+client = chromadb.PersistentClient(path=db_path)
 
 # chroma DB wrapper for openAI
 openai_ef = embedding_functions.OpenAIEmbeddingFunction(
@@ -48,8 +52,8 @@ def process_entry(entry: Dict) -> List[Dict]:
                 
     return chunks
 
-parser = argparse.ArgumentParser()
-parser.add_argument("dataset_path", type=str, help="")
+parser = argparse.ArgumentParser(description="Builds knowledge base as a ChromaDB database by recursively processing the data.json files under the specified dataset_path . To download the dataset, see: https://docs.minedojo.org/sections/getting_started/data.html#wiki-database")
+parser.add_argument("dataset_path", type=str, help="Path to raw data directories")
 args = parser.parse_args()
 
 if not os.path.exists(args.dataset_path):
