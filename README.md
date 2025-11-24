@@ -13,7 +13,9 @@ The current agent loop is roughly:
     * If the task isn't completed, env feedback and exec errors are added into the next prompt until success or the agent gets stuck.
     * On success, new skill is indexed by the embedding of its description (to be retrieved later for other tasks)
 
-We're looking to either improve the additional context added for the task plan generation in step 1 or add additional information retrieval step before code generation at step 3. 
+We're looking to either improve:
+* additional context added for the task plan generation in step 1. See: `CurriculumAgent.get_task_context()` in `voyager-rag/Voyager/voyager/agents/curriculum.py`
+* add additional information retrieval step before code generation at step 3. 
 
 ## Minecraft Knowledge Base
 We'll need process the wiki/reddit data in order to build the knowledge base. The simplest form of this would be to just treat everything as raw text and look them up using some similarity search:
@@ -21,6 +23,8 @@ We'll need process the wiki/reddit data in order to build the knowledge base. Th
 2. Chunk the docs 
 3. Embed each chunk into a vector using a text embedding model. 
 4. Index the embeddings + chunks in some vector DB. 
+
+Basic implementation under: `voyager-rag/Voyager/knowledge_base/kb_data_pipeline.py`
 
 # TODO
 * Everyone should:
