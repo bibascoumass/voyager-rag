@@ -77,12 +77,6 @@ Follow the instructions in [Fabric Mods Install](installation/fabric_mods_instal
 # Getting Started
 Voyager uses OpenAI's GPT-4 as the language model. You need to have an OpenAI API key to use Voyager. You can get one from [here](https://platform.openai.com/account/api-keys).
 
-BIBASCO: Before running starter code below, make sure to install the dependencies listed in the requirements.txt file in a virtual env:
-```
-python -m venv venv/
-source venv/bin/activate
-pip install -r requirements.txt
-```
 * I've checked in sample code at: voyager-rag/Voyager/sample-run.py
 
 After the installation process, you can run Voyager by:
