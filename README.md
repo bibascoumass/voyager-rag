@@ -38,3 +38,19 @@ Basic implementation under: `voyager-rag/Voyager/knowledge_base/kb_data_pipeline
         * (TBD) 
 * Update the automatic curriculum to use our knowledge base when looking up task context
     * Understand why the context starts out as some other value and only gets updated to our RAG system's reply after sometime. Not clear if this is an issue or just the agent's standard behavior. 
+
+
+# Results
+Voyager sample results are checked-in at: `voyager-rag/Voyager/results/`
+* `default_voyager_5_iter.out` shows the output for default lifelong learning with a iteration limit of 5. (No RAG changes at all)
+    ```
+    Context: Question: How to mine 2 wood logs in Minecraft?
+    Answer: To mine 2 wood logs in Minecraft, you need to find a tree and use a tool like an axe to chop down the wood blocks. Each wood block will drop one log when mined.
+    ```
+* `voyager_rag_5_iter.out` shows the output for lifelong learning with our RAG logic and iteration limit of 5. 
+    ```
+    Context: Question: How to mine 2 birch logs in Minecraft?
+    - Wiki Page 'Unknown Page': Pickaxes are crafted using 2 sticks and 3 identical units of tool material.
+    - Wiki Page 'Unknown Page': Wooden pickaxes can be used as a fuel in furnaces, smelting 1 item per wooden pickaxe.
+    - Wiki Page 'Unknown Page': Piglins are attracted to golden pickaxes and run toward any golden pickaxes on the ground, and inspect it for 6 to 8 seconds before putting it in their inventory.
+    ```
