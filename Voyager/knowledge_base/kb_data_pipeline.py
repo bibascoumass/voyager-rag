@@ -1,22 +1,24 @@
 import json
 import os
 import argparse
+import sys
+import re
+import uuid
 from typing import List, Dict
 import chromadb
 from chromadb.utils import embedding_functions
 
 # wiki dataset details: https://docs.minedojo.org/sections/getting_started/data.html#wiki-database
 
-
 script_dir = os.path.dirname(os.path.abspath(__file__))
-db_path = os.path.join(script_dir, "kb1") 
+db_path = os.path.join(script_dir, "kb1")
 
 client = chromadb.PersistentClient(path=db_path)
 
 # chroma DB wrapper for openAI
 openai_ef = embedding_functions.OpenAIEmbeddingFunction(
-    api_key=os.environ.get("OPENAI_API_KEY"), # ensure OPENAI_API_KEY env var is for api key
-    model_name="text-embedding-ada-002" 
+    api_key=os.environ.get("OPENAI_API_KEY"),  # ensure OPENAI_API_KEY env var is set
+    model_name="text-embedding-ada-002"
 )
 
 # https://cookbook.chromadb.dev/core/collections/
@@ -25,17 +27,71 @@ embeddings = client.get_or_create_collection(
     embedding_function=openai_ef
 )
 
-def process_entry(entry: Dict) -> List[Dict]:
-    # print(f"ENTRY: {entry}")
-    page_title = entry.get('metadata.title', 'Unknown Page') 
-    
+def sanitize_for_id(s: str) -> str:
+    """Make a string safe for use in an id (replace non-alnum with underscore)."""
+    if not s:
+        return "unknown"
+    # Unescape percent-encoding if present
+    try:
+        from urllib.parse import unquote
+        s = unquote(s)
+    except Exception:
+        pass
+    s = s.strip()
+    s = re.sub(r'[^0-9A-Za-z]+', '_', s)
+    s = re.sub(r'_+', '_', s)
+    return s.strip('_') or "unknown"
+
+def make_unique_ids(ids_list: List[str]) -> List[str]:
+    """
+    If any IDs are duplicated, make them unique by appending a short uuid.
+    This avoids add-time failures while keeping the original id readable when unique.
+    """
+    seen = {}
+    new_ids = []
+    for i, id_ in enumerate(ids_list):
+        if id_ not in seen:
+            seen[id_] = 1
+            new_ids.append(id_)
+        else:
+            seen[id_] += 1
+            # append a short uuid suffix to make it unique
+            suffix = uuid.uuid4().hex[:8]
+            new_id = f"{id_}__dup{seen[id_]}__{suffix}"
+            new_ids.append(new_id)
+    return new_ids
+
+def process_entry(entry: Dict, file_key: str) -> List[Dict]:
+    """
+    Turn a single data.json entry into chunk dicts.
+    file_key should be a string identifying the file/dir (used to make ids unique across files).
+    """
+    # Try a few places for the title
+    title = None
+    if isinstance(entry, dict):
+        # common patterns: entry['title'] or entry['metadata']['title']
+        title = entry.get('title')
+        if not title:
+            metadata = entry.get('metadata') or {}
+            # metadata might be a dict with key 'title' or 'title' nested differently
+            if isinstance(metadata, dict):
+                title = metadata.get('title')
+            # sometimes keys are flattened; try fallback:
+            if not title:
+                title = entry.get('metadata.title')
+
+    page_title = title or "Unknown Page"
+
     chunks = []
-        
-    if 'texts' in entry: # other data types are 'metadata', 'tables', 'images', 'sprites', 'texts', 'screenshot'
+
+    if 'texts' in entry and isinstance(entry['texts'], list):
         for idx, text_item in enumerate(entry['texts']):
-            # TODO - determine if we need to do anymore data cleaning here. 
-            clean_text = text_item.get('text', '').strip()            
-            
+            clean_text = (text_item.get('text', '') if isinstance(text_item, dict) else str(text_item)).strip()
+            # sanitize parts used in id
+            small_title = sanitize_for_id(page_title)
+            small_filekey = sanitize_for_id(file_key)
+            base_id = f"{small_filekey}__{small_title}__text_{idx}"
+
             chunk = {
                 "text": f"Wiki Page '{page_title}': {clean_text}",
                 "metadata": {
@@ -43,60 +99,67 @@ def process_entry(entry: Dict) -> List[Dict]:
                     "title": page_title,
                     "url": entry.get('url', '')
                 },
-                # chunk ID = title + idx
-                "id": f"{page_title.replace(' ', '_')}_text_{idx}"
+                "id": base_id
             }
             chunks.append(chunk)
-            # print(f"CHUNK: {chunk}")
-    
-                
     return chunks
 
-parser = argparse.ArgumentParser(description="Builds knowledge base as a ChromaDB database by recursively processing the data.json files under the specified dataset_path . To download the dataset, see: https://docs.minedojo.org/sections/getting_started/data.html#wiki-database")
+parser = argparse.ArgumentParser(
+    description="Builds knowledge base as a ChromaDB database by recursively processing the data.json files under the specified dataset_path ."
+)
 parser.add_argument("dataset_path", type=str, help="Path to raw data directories")
 args = parser.parse_args()
 
 if not os.path.exists(args.dataset_path):
     print(f"dataset_path '{args.dataset_path}' not found")
-    exit
+    sys.exit(1)
 
 docs = []
 metas = []
 ids = []
-BATCH_SIZE = 100 # arbitrary
+BATCH_SIZE = 100  # arbitrary
 file_cnt = 0
 
 for root, dirs, files in os.walk(args.dataset_path):
     if "data.json" in files:
         json_path = os.path.join(root, "data.json")
-        
+
         try:
             with open(json_path, 'r', encoding='utf-8') as f:
                 entry_data = json.load(f)
 
-            chunks = process_entry(entry_data)
-            
+            # build a file_key based on relative path from dataset root
+            file_key = os.path.relpath(root, args.dataset_path).replace(os.sep, '_') or 'root'
+            chunks = process_entry(entry_data, file_key)
+
             if chunks:
                 file_cnt += 1
-                print(f"Processing: {entry_data.get('title', 'Untitled')} ({len(chunks)} chunks)") # todo fix metadata reference
+                print(f"Processing: {entry_data.get('title', 'Untitled')} ({len(chunks)} chunks)")
 
                 for chunk in chunks:
                     docs.append(chunk['text'])
                     metas.append(chunk['metadata'])
                     ids.append(chunk['id'])
-                                    
+
                     if len(docs) >= BATCH_SIZE:
+                        # ensure ids are unique before adding
+                        if len(ids) != len(set(ids)):
+                            print("Duplicate IDs detected in batch; making them unique automatically.")
+                            ids = make_unique_ids(ids)
                         embeddings.add(
                             documents=docs,
                             metadatas=metas,
                             ids=ids
-                        )                        
+                        )
                         docs, metas, ids = [], [], []
 
         except Exception as e:
             print(f"Failed processing file {json_path}: {e}")
 
 if docs:
+    if len(ids) != len(set(ids)):
+        print("Duplicate IDs detected in final batch; making them unique automatically.")
+        ids = make_unique_ids(ids)
     embeddings.add(
         documents=docs,
         metadatas=metas,
@@ -107,12 +170,12 @@ print(f"finished processing {file_cnt} files")
 
 # TESTING
 query = "recipe for iron pickaxe"
-results = embeddings.query( # https://cookbook.chromadb.dev/core/advanced/queries/#query-pipeline
+results = embeddings.query(
     query_texts=[query],
     n_results=1
 )
 
-if results['documents'] and results['documents'][0]:
+if results.get('documents') and results['documents'][0]:
     print(f"query: '{query}'")
     print(f"result: {results['documents'][0][0]}")
 else:
