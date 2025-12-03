@@ -7,6 +7,8 @@ import uuid
 from typing import List, Dict
 import chromadb
 from chromadb.utils import embedding_functions
+import hashlib
+from math import ceil
 
 # wiki dataset details: https://docs.minedojo.org/sections/getting_started/data.html#wiki-database
 
@@ -104,6 +106,48 @@ def process_entry(entry: Dict, file_key: str) -> List[Dict]:
             chunks.append(chunk)
     return chunks
 
+def get_existing_ids(collection, ids_to_check: List[str], batch_size=256) -> set:
+    """Check which IDs already exist in the collection."""
+    existing = set()
+    # check in batches
+    for i in range(0, len(ids_to_check), batch_size):
+        batch = ids_to_check[i:i+batch_size]
+        try:
+            response = collection.get(ids=batch)
+            found_ids = response.get('ids') or []
+            if isinstance(found_ids, (list, tuple, set)):
+                existing.update(found_ids)
+        except Exception:
+            for single in batch:
+                try:
+                    resp = collection.get(ids=[single])
+                    if resp.get('ids'):
+                        existing.add(single)
+                except Exception:
+                    pass
+    return existing
+
+def add_only_new(collection, documents, metadatas, ids, batch_check_size=256):
+    if not ids:
+        return
+    existing_ids = get_existing_ids(collection, ids, batch_size=batch_check_size) #get existing ids already in colelction
+
+    new_docs = []
+    new_metadata = []
+    new_ids = []
+    for doc, meta, id in zip(documents, metadatas, ids):
+        if id in existing_ids:
+            continue
+        new_docs.append(doc)
+        new_metadata.append(meta)
+        new_ids.append(id)
+
+    if len(new_ids) > 0:
+        collection.add(documents=new_docs, metadatas=new_metadata, ids=new_ids)
+        print(f"Added {len(new_ids)} new docs, skipped {len(ids) - len(new_ids)} already existing ids")
+    else:
+        print("No new docs to add (all ids already present).")
+
 parser = argparse.ArgumentParser(
     description="Builds knowledge base as a ChromaDB database by recursively processing the data.json files under the specified dataset_path ."
 )
@@ -146,11 +190,12 @@ for root, dirs, files in os.walk(args.dataset_path):
                         if len(ids) != len(set(ids)):
                             print("Duplicate IDs detected in batch; making them unique automatically.")
                             ids = make_unique_ids(ids)
-                        embeddings.add(
-                            documents=docs,
-                            metadatas=metas,
-                            ids=ids
-                        )
+                        # embeddings.add(
+                        #     documents=docs,
+                        #     metadatas=metas,
+                        #     ids=ids
+                        # )
+                        add_only_new(embeddings, docs, metas, ids)
                         docs, metas, ids = [], [], []
 
         except Exception as e:
@@ -160,11 +205,12 @@ if docs:
     if len(ids) != len(set(ids)):
         print("Duplicate IDs detected in final batch; making them unique automatically.")
         ids = make_unique_ids(ids)
-    embeddings.add(
-        documents=docs,
-        metadatas=metas,
-        ids=ids
-    )
+    # embeddings.add(
+    #     documents=docs,
+    #     metadatas=metas,
+    #     ids=ids
+    # )
+    add_only_new(embeddings, docs, metas, ids)
 
 print(f"finished processing {file_cnt} files")
 
