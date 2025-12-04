@@ -7,6 +7,7 @@ import uuid
 from typing import List, Dict
 import chromadb
 from chromadb.utils import embedding_functions
+from chromadb.config import Settings
 import hashlib
 from math import ceil
 
@@ -15,18 +16,55 @@ from math import ceil
 script_dir = os.path.dirname(os.path.abspath(__file__))
 db_path = os.path.join(script_dir, "kb1")
 
-client = chromadb.PersistentClient(path=db_path)
-
-# chroma DB wrapper for openAI
-openai_ef = embedding_functions.OpenAIEmbeddingFunction(
-    api_key=os.environ.get("OPENAI_API_KEY"),  # ensure OPENAI_API_KEY env var is set
-    model_name="text-embedding-ada-002"
+# client = chromadb.PersistentClient(path=db_path)
+client = chromadb.Client(
+    Settings(
+        chroma_db_impl="duckdb+parquet",   # local persistent backend used in 0.3.x
+        persist_directory=db_path
+    )
 )
 
-# https://cookbook.chromadb.dev/core/collections/
+try:
+    from openai import OpenAI
+except Exception as e:
+    raise RuntimeError(
+        "Failed importing OpenAI client. Ensure you have openai>=1.0 installed "
+        "or pin to openai==0.28 if you want to keep the old API."
+    ) from e
+
+OPENAI_API_KEY = os.environ.get("CHROMA_OPENAI_API_KEY") or os.environ.get("OPENAI_API_KEY")
+if not OPENAI_API_KEY:
+    raise RuntimeError("Please set CHROMA_OPENAI_API_KEY or OPENAI_API_KEY in the environment.")
+
+_openai_client = OpenAI(api_key=OPENAI_API_KEY)
+
+def openai_embedding_function(texts: List[str]) -> List[List[float]]:
+    """
+    Callable matching chroma's expected embedding_function signature:
+      input: list[str] (or single str)
+      output: list[list[float]] embeddings (one list per input)
+    Uses OpenAI's new embeddings endpoint (openai-python >=1.0 style).
+    """
+    if isinstance(texts, str):
+        texts = [texts]
+    if not isinstance(texts, (list, tuple)):
+        raise ValueError("texts must be a string or list/tuple of strings")
+
+    model_name = "text-embedding-3-small"   # recommended for new API; change if you want text-embedding-3-large
+    batch_size = 128
+    all_embeddings = []
+    for i in range(0, len(texts), batch_size):
+        batch = texts[i : i + batch_size]
+        resp = _openai_client.embeddings.create(model=model_name, input=batch)
+        # resp.data is a list; each item has .embedding
+        for item in resp.data:
+            all_embeddings.append(item.embedding)
+    return all_embeddings
+
+# hook the callable into the Chroma collection the same way
 embeddings = client.get_or_create_collection(
     name="minedojo_wiki",
-    embedding_function=openai_ef
+    embedding_function=openai_embedding_function
 )
 
 def sanitize_for_id(s: str) -> str:
@@ -211,6 +249,8 @@ if docs:
     #     ids=ids
     # )
     add_only_new(embeddings, docs, metas, ids)
+
+client.persist()
 
 print(f"finished processing {file_cnt} files")
 
