@@ -17,6 +17,7 @@ import os
 # import argparse
 # from typing import List, Dict
 import chromadb
+from chromadb.config import Settings
 from chromadb.utils import embedding_functions
 
 class CurriculumAgent:
@@ -100,12 +101,23 @@ class CurriculumAgent:
         self.kb_dir = kb_dir
         print(f"-------------------------- KB PATH: {self.kb_dir}")
         if kb_dir:
-            self.kb_client = chromadb.PersistentClient(path=kb_dir)
+            self.kb_client = chromadb.Client(
+                Settings(
+                    chroma_db_impl="duckdb+parquet",
+                    persist_directory=kb_dir,
+                    anonymized_telemetry=False
+                )
+            )
+            
             self.openai_ef = embedding_functions.OpenAIEmbeddingFunction(
                 api_key=os.environ.get("OPENAI_API_KEY"),
                 model_name="text-embedding-ada-002"
             )
-            self.kb_collection = self.kb_client.get_collection("minedojo_wiki", embedding_function=self.openai_ef)
+
+            self.kb_collection = self.kb_client.get_collection(
+                name="minedojo_wiki", 
+                embedding_function=self.openai_ef
+            )
 
     @property
     def default_warmup(self):
