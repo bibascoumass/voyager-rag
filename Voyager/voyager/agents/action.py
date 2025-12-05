@@ -35,6 +35,7 @@ class ActionAgent:
             model_name=model_name,
             temperature=temperature,
             request_timeout=request_timout,
+            base_url="https://api.deepseek.com/v1",
         )
 
     def update_chest_memory(self, chests):
