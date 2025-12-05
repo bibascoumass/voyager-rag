@@ -1,0 +1,3 @@
+async function mineThreeJungleLogs(bot) {
+    // The function is about collecting three jungle logs by first checking the inventory for existing logs, then exploring in a random direction to locate jungle logs, and finally mining the required number of logs to reach a total of three.
+}

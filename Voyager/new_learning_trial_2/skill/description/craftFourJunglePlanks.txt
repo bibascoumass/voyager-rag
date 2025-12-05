@@ -1,0 +1,3 @@
+async function craftFourJunglePlanks(bot) {
+    // The function is about crafting 4 jungle planks from jungle logs. First check if there are already at least 4 jungle planks in the inventory. If not, check if there is at least 1 jungle log available. If a jungle log is present, craft 4 jungle planks using the inventory crafting grid. Finally, verify the new count of jungle planks in the inventory.
+}

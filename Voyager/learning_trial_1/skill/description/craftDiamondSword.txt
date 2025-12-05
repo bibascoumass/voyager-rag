@@ -1,0 +1,3 @@
+async function craftDiamondSword(bot) {
+    // The function is about crafting a diamond sword using a crafting table. First, ensure a crafting table is placed nearby; if not, place one. Next, check the inventory for the required materials: two diamonds and one stick. If the materials are sufficient, proceed to craft the diamond sword. After crafting, verify that the diamond sword is in the inventory. If successful, optionally equip the diamond sword in the hand.
+}

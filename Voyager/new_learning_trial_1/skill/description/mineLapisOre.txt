@@ -1,0 +1,3 @@
+async function mineLapisOre(bot) {
+    // The function is about mining lapis lazuli from lapis ore. First check if lapis lazuli is already in the inventory. Then ensure a suitable pickaxe (stone or better) is available. Next, find a lapis ore block nearby; if not found, explore the environment in a random direction until one is located. Once found, mine the lapis ore block to obtain lapis lazuli. Finally, verify that lapis lazuli has been successfully collected.
+}

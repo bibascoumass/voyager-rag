@@ -1,0 +1,3 @@
+async function mineFiveIronOre(bot) {
+    // The function is about mining 5 iron ore blocks using an iron pickaxe. First check if at least 5 raw iron are already in the inventory. If not, ensure an iron pickaxe is equipped in the hand. Next, explore underground to find iron ore blocks. Once iron ore is found, mine the required number of blocks to reach a total of 5 raw iron. Finally, verify the inventory to confirm that at least 5 raw iron have been collected.
+}

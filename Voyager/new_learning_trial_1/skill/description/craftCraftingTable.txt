@@ -1,0 +1,3 @@
+async function craftCraftingTable(bot) {
+    // The function is about crafting a crafting table using oak planks. First check if a crafting table is already in the inventory. If not, check if there are at least 4 oak planks available. If there are insufficient oak planks, craft them from oak logs using the personal crafting grid. Then, if enough oak planks are present, craft a crafting table using the personal crafting grid. Finally, verify whether the crafting table has been successfully crafted.
+}

@@ -1,0 +1,3 @@
+async function mineStone(bot) {
+    // The function is about mining stone to obtain 10 cobblestone using a wooden pickaxe. First, it ensures a wooden pickaxe is available, crafting one if necessary. It then equips the wooden pickaxe and checks the current cobblestone count. Next, it searches for stone blocks nearby and mines them until 10 cobblestone are collected. If no stone is found, it explores underground to locate more. Finally, it reports success upon reaching the target or failure if insufficient cobblestone is gathered.
+}

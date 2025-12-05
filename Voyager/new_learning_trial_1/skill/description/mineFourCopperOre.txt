@@ -1,0 +1,3 @@
+async function mineFourCopperOre(bot) {
+    // The function is about mining 4 copper ore blocks using a stone or better pickaxe. First, it checks the inventory for a suitable pickaxe and equips it. Then, it searches for copper ore blocks nearby. If not enough are found, it explores the environment, often heading underground, to locate the required ore blocks. Once at least 4 copper ore blocks are located, it mines them. Finally, it verifies the resulting raw copper count.
+}

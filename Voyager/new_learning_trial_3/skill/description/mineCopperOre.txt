@@ -1,0 +1,3 @@
+async function mineCopperOre(bot) {
+    // The function is about mining copper ore using a stone pickaxe. First, it ensures a stone pickaxe is available by crafting one if needed, which may involve gathering materials like cobblestone and sticks. Then, it equips the stone pickaxe in hand. Next, it searches for copper ore nearby, exploring underground if necessary. Once found, it mines one copper ore block. Finally, it verifies that raw copper has been obtained from the mining process.
+}

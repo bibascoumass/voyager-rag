@@ -1,0 +1,3 @@
+async function craftWoodenPickaxe(bot) {
+    // The function is about crafting a wooden pickaxe using spruce logs. First, place a crafting table near the player. Next, convert spruce logs into spruce planks by crafting each log individually. Then, craft sticks from the spruce planks using the crafting table. Finally, use the remaining planks and sticks to craft a wooden pickaxe at the crafting table.
+}

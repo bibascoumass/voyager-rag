@@ -1,0 +1,3 @@
+async function smeltCopperOre(bot) {
+    // The function is about smelting raw copper into copper ingots using a furnace. First, it checks for a furnace nearby and places one if none is found. Then, it ensures there is raw copper available in the inventory. Next, it selects a suitable fuel source, such as spruce logs or alternatives, for the smelting process. After that, it smelts one raw copper using the chosen fuel. Finally, it verifies that a copper ingot has been successfully obtained.
+}

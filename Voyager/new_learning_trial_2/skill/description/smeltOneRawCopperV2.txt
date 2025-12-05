@@ -1,0 +1,3 @@
+async function smeltOneRawCopper(bot) {
+    // The function is about smelting one raw copper into a copper ingot using a furnace and coal as fuel. First check if raw copper and coal are available in the inventory. If not, the function exits. Next, place a furnace nearby if one is not already present. Then, smelt the raw copper using coal as fuel in the furnace. Finally, verify that the smelting was successful by checking the inventory for the resulting copper ingot.
+}

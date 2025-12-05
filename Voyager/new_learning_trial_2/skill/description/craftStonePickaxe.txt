@@ -1,0 +1,3 @@
+async function craftStonePickaxe(bot) {
+    // The function is about crafting a stone pickaxe by gathering necessary materials and using a crafting table. First, check if there are enough sticks and cobblestones in the inventory. If not, craft sticks from planks and mine stone to obtain cobblestone. Next, place a crafting table if one is not nearby. Then, use the crafting table to craft a stone pickaxe. Finally, verify that the stone pickaxe has been successfully crafted.
+}

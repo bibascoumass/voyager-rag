@@ -1,0 +1,3 @@
+async function smeltOneRawCopper(bot) {
+    // The function is about smelting one raw copper into a copper ingot using a furnace and jungle planks as fuel. First check if raw copper and jungle planks are available in the inventory. If not, exit. Next, place a furnace nearby if one is not already present. Then, smelt the raw copper using the jungle planks as fuel in the furnace. Finally, verify that a copper ingot has been successfully produced.
+}

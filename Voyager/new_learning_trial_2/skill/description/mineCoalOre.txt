@@ -1,0 +1,3 @@
+async function mineCoalOre(bot) {
+    // The function is about mining a coal ore using a suitable pickaxe. First check if any pickaxe is available in the inventory. If a pickaxe is available, search for a nearby coal ore block. If found, mine one coal ore block. If not found, explore in a random direction to locate a coal ore block. Once found during exploration, mine one coal ore block. Finally, verify the coal count in the inventory.
+}

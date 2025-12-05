@@ -1,0 +1,3 @@
+async function craftIronPickaxe(bot) {
+    // The function checks if an iron pickaxe is already in the inventory and returns if one is found.
+}

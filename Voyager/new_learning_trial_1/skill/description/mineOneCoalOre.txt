@@ -1,0 +1,3 @@
+async function mineOneCoalOre(bot) {
+    // The function is about mining one coal ore to obtain coal. First check if coal is already in the inventory. If not, look for a coal ore block nearby. If none is found, explore in a random direction until a coal ore block is located. Then mine the coal ore block. Finally, verify that coal has been successfully added to the inventory.
+}

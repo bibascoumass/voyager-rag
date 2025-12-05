@@ -1,0 +1,3 @@
+async function mineCopperOre(bot) {
+    // The function is about mining a copper ore block to obtain raw copper. First, it checks if any pickaxe is available in the inventory. If a pickaxe is available, it looks for a copper ore block nearby. If no copper ore is found nearby, it explores the environment in a random direction until finding one. Once a copper ore block is found, it mines exactly one block. Finally, it verifies that the raw copper count in the inventory has increased after mining.
+}

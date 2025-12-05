@@ -1,0 +1,3 @@
+async function mineIronOre(bot) {
+    // The function is about mining one iron ore using a stone or better pickaxe. First check if raw iron is already in the inventory. Next, ensure a suitable pickaxe is available. Then, find a nearby iron ore block, exploring randomly if none is found. Once located, mine the iron ore block. Finally, verify that raw iron has been successfully obtained.
+}

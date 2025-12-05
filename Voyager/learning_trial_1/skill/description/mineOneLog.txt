@@ -1,0 +1,3 @@
+async function mineOneLog(bot) {
+    // The function is about mining one log block from various tree types. First, it checks for nearby logs of common tree types. If none are found, it explores the environment in a random direction until a log is located. Once a log is found, it mines exactly one block of that log type.
+}

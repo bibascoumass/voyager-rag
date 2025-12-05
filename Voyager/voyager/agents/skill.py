@@ -24,6 +24,7 @@ class SkillManager:
             model_name=model_name,
             temperature=temperature,
             request_timeout=request_timout,
+            base_url="https://api.deepseek.com/v1",
         )
         U.f_mkdir(f"{ckpt_dir}/skill/code")
         U.f_mkdir(f"{ckpt_dir}/skill/description")
@@ -39,7 +40,10 @@ class SkillManager:
         self.ckpt_dir = ckpt_dir
         self.vectordb = Chroma(
             collection_name="skill_vectordb",
-            embedding_function=OpenAIEmbeddings(),
+            embedding_function=OpenAIEmbeddings(
+                base_url="https://api.openai.com/v1",
+                openai_api_key=os.environ.get("OPENAI_EMBEDDING_API_KEY")
+            ),
             persist_directory=f"{ckpt_dir}/skill/vectordb",
         )
         assert self.vectordb._collection.count() == len(self.skills), (

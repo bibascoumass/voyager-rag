@@ -1,0 +1,3 @@
+async function mineSpruceLogs(bot) {
+    // The function is about collecting 5 spruce logs by first checking the current inventory count and then mining nearby logs if available; if not enough logs are nearby, it explores in a random direction to find more, continuing this process until the target is reached or no logs are found.
+}

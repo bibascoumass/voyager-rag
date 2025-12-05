@@ -1,0 +1,3 @@
+async function craftIronHelmet(bot) {
+    // The function is about crafting an iron helmet using a crafting table and iron ingots. First check if an iron helmet is already in the inventory. If not, ensure a crafting table is placed nearby, placing one if necessary. Next, verify there are at least 5 iron ingots available. Then craft the iron helmet using the crafting table. Finally, if successful, equip the iron helmet on the head.
+}

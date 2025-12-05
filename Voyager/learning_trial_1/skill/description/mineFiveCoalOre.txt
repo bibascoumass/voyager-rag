@@ -1,0 +1,3 @@
+async function mineFiveCoalOre(bot) {
+    // The function is about mining at least 5 coal by first checking the current coal count and ensuring a wooden or stone pickaxe is equipped. If there are not enough coal ore blocks nearby, it explores the environment to find more. It then mines the required number of coal ore blocks, handling errors by mining individually if needed. Finally, it verifies that at least 5 coal have been collected.
+}

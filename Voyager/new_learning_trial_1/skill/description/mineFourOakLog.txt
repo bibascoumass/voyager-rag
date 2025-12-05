@@ -1,0 +1,3 @@
+async function mineFourOakLog(bot) {
+    // The function is about mining oak logs until having at least four in total. First check the current number of oak logs in the inventory. If there are already enough, the function ends. Otherwise, calculate how many more logs are needed. Then explore the environment in a random direction to find the required number of oak log blocks. If enough logs are found, mine them. Finally, verify the final count of oak logs in the inventory.
+}

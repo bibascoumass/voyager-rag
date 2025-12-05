@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import random
 import re
 
@@ -30,11 +31,13 @@ class CurriculumAgent:
             model_name=model_name,
             temperature=temperature,
             request_timeout=request_timout,
+            base_url="https://api.deepseek.com/v1",
         )
         self.qa_llm = ChatOpenAI(
             model_name=qa_model_name,
             temperature=qa_temperature,
             request_timeout=request_timout,
+            base_url="https://api.deepseek.com/v1",
         )
         assert mode in [
             "auto",
@@ -57,7 +60,10 @@ class CurriculumAgent:
         # vectordb for qa cache
         self.qa_cache_questions_vectordb = Chroma(
             collection_name="qa_cache_questions_vectordb",
-            embedding_function=OpenAIEmbeddings(),
+            embedding_function=OpenAIEmbeddings(
+                base_url="https://api.openai.com/v1",
+                openai_api_key=os.environ.get("OPENAI_EMBEDDING_API_KEY")
+            ),
             persist_directory=f"{ckpt_dir}/curriculum/vectordb",
         )
         assert self.qa_cache_questions_vectordb._collection.count() == len(

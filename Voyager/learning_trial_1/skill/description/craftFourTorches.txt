@@ -1,0 +1,3 @@
+async function craftFourTorches(bot) {
+    // The function is about crafting four torches using a crafting table. First, ensure a crafting table is placed nearby; if not, place one. Next, check the inventory for required materials: at least one stick and one coal. Then, craft torches using the crafting table, which yields four torches per recipe. Finally, verify the number of torches crafted in the inventory.
+}

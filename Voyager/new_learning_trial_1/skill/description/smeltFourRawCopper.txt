@@ -1,0 +1,3 @@
+async function smeltFourRawCopper(bot) {
+    // The function is about smelting raw copper into copper ingots to obtain at least four ingots. First, it checks the current inventory for copper ingots and raw copper, then calculates how many more raw copper need to be smelted. If there is not enough raw copper, it mines additional copper ore using a suitable pickaxe. Next, it ensures a furnace is available by crafting and placing one if necessary, and gathers fuel like coal or wood. Finally, it smelts the required amount of raw copper using the available fuel and verifies that at least four copper ingots are obtained.
+}

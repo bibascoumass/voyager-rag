@@ -1,0 +1,3 @@
+async function mineDeepslateDiamondOre(bot) {
+    // The function is about mining deepslate diamond ore using an iron pickaxe. First check if an iron pickaxe is in the inventory. If the iron pickaxe is available, equip it in the hand. Next, look for deepslate diamond ore nearby. If found, mine one block of deepslate diamond ore. If not found, explore in a random direction to find deepslate diamond ore. Once found during exploration, mine one block of deepslate diamond ore.
+}

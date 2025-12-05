@@ -1,0 +1,3 @@
+async function smeltRawCopper(bot) {
+    // The function is about smelting 9 raw copper into copper ingots using a furnace. First, locate or place a furnace nearby. Then, ensure there are at least 9 raw copper in the inventory, mining more copper ore if needed. Next, check for available fuel, using spruce logs or alternative fuels if necessary. Finally, smelt the raw copper using the chosen fuel and verify the resulting copper ingots.
+}

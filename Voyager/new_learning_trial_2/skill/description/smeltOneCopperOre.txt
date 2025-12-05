@@ -1,0 +1,3 @@
+async function smeltOneCopperOre(bot) {
+    // The function is about smelting one copper ore into a copper ingot using a furnace. First check if copper ore is in the inventory; if not, mine one copper ore using a suitable pickaxe. Next, ensure a furnace is available nearby; if not, place one. Then verify that coal is available for fuel. Finally, smelt the copper ore using the furnace and coal.
+}

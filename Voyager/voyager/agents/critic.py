@@ -16,6 +16,7 @@ class CriticAgent:
             model_name=model_name,
             temperature=temperature,
             request_timeout=request_timout,
+            base_url="https://api.deepseek.com/v1",
         )
         assert mode in ["auto", "manual"]
         self.mode = mode

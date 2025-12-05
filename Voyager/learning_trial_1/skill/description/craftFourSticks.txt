@@ -1,0 +1,3 @@
+async function craftFourSticks(bot) {
+    // The function is about crafting four sticks from oak planks. First check the current number of sticks in the inventory. Then check if there are at least two oak planks available. If not, check for oak logs to craft more planks. If oak logs are available, craft oak planks from them. Finally, craft four sticks using two oak planks.
+}

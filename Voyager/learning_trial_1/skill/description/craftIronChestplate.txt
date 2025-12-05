@@ -1,0 +1,3 @@
+async function craftIronChestplate(bot) {
+    // The function is about crafting an iron chestplate using 8 iron ingots. First check if an iron chestplate is already in the inventory. If not, ensure there are at least 8 iron ingots by mining iron ore and smelting it into ingots using a furnace and coal. Then place a crafting table if one is not nearby. Next, craft the iron chestplate using the iron ingots. Finally, equip the newly crafted iron chestplate on the torso.
+}

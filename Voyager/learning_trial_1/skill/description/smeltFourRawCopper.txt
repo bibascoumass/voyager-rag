@@ -1,0 +1,3 @@
+async function smeltFourRawCopper(bot) {
+    // The function is about smelting 4 raw copper into copper ingots using a furnace and coal. First, it checks for a nearby furnace and places one if needed. Then, it verifies there are at least 4 raw copper and 4 coal available. Next, it smelts the raw copper using coal as fuel. Finally, it confirms the smelting by checking the resulting copper ingot count.
+}
