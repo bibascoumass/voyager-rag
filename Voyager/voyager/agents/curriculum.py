@@ -461,7 +461,7 @@ class CurriculumAgent:
                 query_texts=[question],
                 n_results=1
             )
-            answer = "\n".join([f"- {doc}" for doc in results['documents'][0]])
+            answer = "\n".join([f"Answer: {doc}" for doc in results['documents'][0]])
             # print(f"-------------------------- KB answer: {answer}")
         else: # default behavior
             if question in self.qa_cache:
