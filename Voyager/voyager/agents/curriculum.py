@@ -459,7 +459,7 @@ class CurriculumAgent:
         if self.kb_dir: # check knowledge base            
             results = self.kb_collection.query(
                 query_texts=[question],
-                n_results=3
+                n_results=1
             )
             answer = "\n".join([f"- {doc}" for doc in results['documents'][0]])
             # print(f"-------------------------- KB answer: {answer}")
