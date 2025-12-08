@@ -26,20 +26,6 @@ We'll need process the wiki/reddit data in order to build the knowledge base. Th
 
 Basic implementation under: `voyager-rag/Voyager/knowledge_base/kb_data_pipeline.py`
 
-# TODO
-* Replicate Voyager GPT-4 baseline. (Do we even get similar results?)
-    * Stub out outline/pseudocode of experiments and how we measure the results.
-* Build the minecraft knowledgebase using the KB pipeline
-    * Ensure the pipeline can process multiple pages 
-    * Ensure the metadata for each chunk is properly set 
-    * Test getting relevant chunks for:
-        * how to craft an item
-        * how to defeat the ender dragon (basically following one of the tutorials)
-        * (TBD) 
-* Update the automatic curriculum to use our knowledge base when looking up task context
-    * Understand why the context starts out as some other value and only gets updated to our RAG system's reply after sometime. Not clear if this is an issue or just the agent's standard behavior. 
-
-
 # Results
 Voyager sample results are checked-in at: `voyager-rag/Voyager/results/`
 * `default_voyager_5_iter.out` shows the output for default lifelong learning with a iteration limit of 5. (No RAG changes at all)
@@ -49,8 +35,6 @@ Voyager sample results are checked-in at: `voyager-rag/Voyager/results/`
     ```
 * `voyager_rag_5_iter.out` shows the output for lifelong learning with our RAG logic and iteration limit of 5. 
     ```
-    Context: Question: How to mine 2 birch logs in Minecraft?
-    - Wiki Page 'Unknown Page': Pickaxes are crafted using 2 sticks and 3 identical units of tool material.
-    - Wiki Page 'Unknown Page': Wooden pickaxes can be used as a fuel in furnaces, smelting 1 item per wooden pickaxe.
-    - Wiki Page 'Unknown Page': Piglins are attracted to golden pickaxes and run toward any golden pickaxes on the ground, and inspect it for 6 to 8 seconds before putting it in their inventory.
+    Context: Question: How to smelt iron ore in Minecraft?
+    Answer: Wiki Page 'Tutorials/Advancement_guide': Once you find iron ore, mine it with your stone pickaxe (don't mine it with a wooden pickaxe since it won't drop anything). Then make a furnace and put the iron ore (if mined with the silk touch enchantment) or raw iron in a furnace, yielding an iron ingot:
     ```
